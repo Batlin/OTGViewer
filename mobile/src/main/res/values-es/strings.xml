@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">OTGViewer</string>
+
+    <string name="home_title">OTGViewer</string>
+    <string name="settings_title">Ajustes</string>
+    <string name="explorer_title">Explorador</string>
+
+    <string name="action_settings">Ajustes</string>
+    <string name="action_showcase">Iniciar diapositivas</string>
+
+    <string name="no_usb_found">Conecta un USB</string>
+
+    <string name="dialog_image_title">Por favor, espera</string>
+    <string name="dialog_image_message">Preparando las imágenes...</string>
+    <string name="dialog_default_title">Copiando fichero</string>
+
+    <string name="toast_no_images">No se han encontrado imágenes en esta ruta</string>
+    <string name="toast_no_app_match">No hay aplicaciones compatibles para abrir este fichero</string>
+
+    <string name="listview_empty">No hay ficheros</string>
+    <string name="listview_error">Error leyendo el USB. Comprueba si es FAT32</string>
+
+    <!-- Settings -->
+    <string name="photos_category_title">Visor de imágenes</string>
+    <string name="enable_gestures">Activar gestos</string>
+    <string name="enable_gestures_sub">¡Sacude el dispositivo para pasar a la siguiente foto!</string>
+    <string name="low_ram">Dispositivo con RAM baja</string>
+    <string name="low_ram_sub">Activa esta opción si el rendimiento no es bueno</string>
+    <string name="showcase_speed">Velocidad en el modo diapositivas</string>
+    <string name="showcase_speed_sub">Selecciona la velocidad entre transiciones</string>
+    <string name="showcase_dialog_title">Escoge la velocidad</string>
+
+    <string name="slow">Lenta</string>
+    <string name="medium">Media</string>
+    <string name="fast">Rápida</string>
+
+    <string name="showcase_longclick_dialog_title">Comenzar diapositivas</string>
+    <string name="showcase_longclick_dialog_message"></string>
+
+    <string name="showcase_tutorial">Ajusta la velocidad haciendo un gesto hacia arriba o abajo. Para o reanuda la presentación con un simple toque</string>
+
+</resources>

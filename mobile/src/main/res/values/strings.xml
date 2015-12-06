@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">OTGViewer</string>
+
+    <string name="home_title">OTGViewer</string>
+    <string name="settings_title">Settings</string>
+    <string name="explorer_title">Explorer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_showcase">Slides</string>
+
+    <string name="no_usb_found">No USB found</string>
+
+    <string name="dialog_image_title">Please, wait a moment</string>
+    <string name="dialog_image_message">Getting things ready...</string>
+    <string name="dialog_default_title">Copying file</string>
+
+    <string name="toast_no_images">No images found</string>
+    <string name="toast_no_app_match">No app found to open this file</string>
+
+    <string name="listview_empty">No files</string>
+    <string name="listview_error">Error reading USB. Check FAT32 format.</string>
+
+    <!-- Settings -->
+    <string name="photos_category_title">Photos viewer</string>
+    <string name="enable_gestures">Enable gestures</string>
+    <string name="enable_gestures_sub">Shake your device to see the next photo!</string>
+    <string name="low_ram">Low RAM</string>
+    <string name="low_ram_sub">Enable this if your OTGViewer performance is not good</string>
+    <string name="showcase_speed">Slides speed</string>
+    <string name="showcase_speed_sub">Select the transition speed within slide mode</string>
+    <string name="showcase_dialog_title">Choose your speed</string>
+
+    <string name="slow">Slow</string>
+    <string name="medium">Medium</string>
+    <string name="fast">Fast</string>
+
+    <string name="showcase_longclick_dialog_title">Start slides</string>
+    <string name="showcase_longclick_dialog_message"></string>
+
+    <string name="showcase_tutorial">Adapt speed swiping up/down. Pause/restart slide mode with a single touch</string>
+
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="seconds">
+        <item>@string/slow</item>
+        <item>@string/medium</item>
+        <item>@string/fast</item>
+    </string-array>
+
+    <string-array name="seconds_values" translatable="false">
+        <item>8000</item>
+        <item>5000</item>
+        <item>3000</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/photos_category_title">
+
+        <CheckBoxPreference
+            android:key="enable_shake"
+            android:title="@string/enable_gestures"
+            android:summary="@string/enable_gestures_sub"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="low_ram"
+            android:title="@string/low_ram"
+            android:summary="@string/low_ram_sub"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:key="showcase_speed"
+            android:title="@string/showcase_speed"
+            android:summary="@string/showcase_speed_sub"
+            android:dialogTitle="@string/showcase_dialog_title"
+            android:entries="@array/seconds"
+            android:entryValues="@array/seconds_values"
+            android:defaultValue="5000"
+             />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

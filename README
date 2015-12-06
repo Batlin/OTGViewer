@@ -1,0 +1,19 @@
+I've decided to make this project open source. It can be downloaded here: https://play.google.com/store/apps/details?id=com.androidinspain.otgviewer
+
+You will need:
+
+- Android Studio
+- v7 Support library
+
+With OTGViewer you can:
+
+- Browse all the contents from your USB (FAT32). You won't have to worry about anything, each file will be opened with the best app for it.
+- Enjoy watching your photos with the embedded photo viewer included in OTGViewer. Thanks to the used algorithms, you won't have to wait for the next photo.
+- Slides mode: enjoy the best experience watching photos with your family or friends. You won't have to pass them manually; they will do automatically and the transition speed can be easily regulated with swipe gestures (up or down, respectively).
+- Android TV support + remote controllers (Nexus Player, for example). Make the most from your Android TV!
+
+Note: libaums library is being used. Therefore, your device doesn't need root nor modified kernels. Only USB OTG support is required.
+
+I really hope you like OTGViewer. I look forward your comments/suggestions in order to improve it. Thank you!
+
+Check other apps I've made: https://play.google.com/store/apps/developer?id=Android+in+Spain
