@@ -582,6 +582,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
         int padding = 0;
+        imageLayout.setBackgroundColor(Color.BLACK);
         imageView.setPadding(padding, padding, padding, padding);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
