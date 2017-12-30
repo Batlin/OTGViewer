@@ -22,6 +22,8 @@
 
     <!-- Settings -->
     <string name="photos_category_title">Photos viewer</string>
+    <string name="enable_transitions">Enable transitions</string>
+    <string name="enable_transitions_sub">Transitions between slides</string>
     <string name="enable_gestures">Enable gestures</string>
     <string name="enable_gestures_sub">Shake your device to see the next photo!</string>
     <string name="low_ram">Low RAM</string>

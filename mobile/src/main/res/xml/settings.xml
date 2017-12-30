@@ -4,6 +4,12 @@
         android:title="@string/photos_category_title">
 
         <CheckBoxPreference
+            android:key="enable_transitions"
+            android:title="@string/enable_transitions"
+            android:summary="@string/enable_transitions_sub"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
             android:key="enable_shake"
             android:title="@string/enable_gestures"
             android:summary="@string/enable_gestures_sub"

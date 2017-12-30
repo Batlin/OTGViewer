@@ -22,6 +22,8 @@
 
     <!-- Settings -->
     <string name="photos_category_title">Visor de imágenes</string>
+    <string name="enable_transitions">Activar animaciones</string>
+    <string name="enable_transitions_sub">Animaciones entre fotos</string>
     <string name="enable_gestures">Activar gestos</string>
     <string name="enable_gestures_sub">¡Sacude el dispositivo para pasar a la siguiente foto!</string>
     <string name="low_ram">Dispositivo con RAM baja</string>

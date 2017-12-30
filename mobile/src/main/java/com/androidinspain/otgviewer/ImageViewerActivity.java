@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -86,6 +87,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
     private boolean mShowcaseRunning;
 
     // Settings
+    private boolean mTransitionsEnabled;
     private boolean mLowRam;
     private boolean mShakeEnabled;
     private int mShowcaseSpeed;
@@ -196,7 +198,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                         if(isLayoutReady(nextImage)) {
                             mCurrentCount++;
 
-                            mViewPager.setCurrentItem(mCurrentCount);
+                            mViewPager.setCurrentItem(mCurrentCount, mTransitionsEnabled);
                             if(DEBUG)
                                 Log.d(TAG_NEXT_SHOWCASE, "isImageReady(" + nextImage + ") is true. Showing photo " + mCurrentCount + ". Sending NEXT_SHOWCASE message in " + mShowcaseSpeed);
                             sendEmptyMessageDelayed(NEXT_SHOWCASE, mShowcaseSpeed);
@@ -394,9 +396,13 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         super.onResume();
 
         // Load configuration
+        mTransitionsEnabled = SettingsFragment.areTransitionsEnabled(this);
         mLowRam = SettingsFragment.isLowRamEnabled(this);
         mShakeEnabled = SettingsFragment.isShakeEnabled(this);
         mShowcaseSpeed = SettingsFragment.getShowcaseSpeed(this);
+
+        if(!mTransitionsEnabled)
+            mViewPager.setPageTransformer(false, new NoPageTransformer());
 
         if(DEBUG)
             Log.d(TAG, "mLowRam: " + mLowRam + ", mShakeEnabled: " + mShakeEnabled);
@@ -711,7 +717,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                     if (DEBUG)
                         Log.d(TAG, "SHAKE DETECTED!");
 
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1);
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, mTransitionsEnabled);
                     lastGesture = curTime;
                 }
 
@@ -745,5 +751,17 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    private static class NoPageTransformer implements ViewPager.PageTransformer {
+        public void transformPage(View view, float position) {
+            if (position < 0) {
+                view.setScrollX((int)((float)(view.getWidth()) * position));
+            } else if (position > 0) {
+                view.setScrollX(-(int) ((float) (view.getWidth()) * -position));
+            } else {
+                view.setScrollX(0);
+            }
+        }
     }
 }

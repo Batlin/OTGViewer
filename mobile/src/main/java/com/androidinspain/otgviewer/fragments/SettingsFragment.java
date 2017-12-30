@@ -24,6 +24,8 @@ import com.androidinspain.otgviewer.R;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final String enable_transitions = "enable_transitions";
+    private static final boolean enable_transitions_def = true;
     private static final String enable_shake = "enable_shake";
     private static final boolean enable_shake_def = true;
     private static final String low_ram = "low_ram";
@@ -36,6 +38,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     public SettingsFragment() {
         // Required empty public constructor
+    }
+
+    public static boolean areTransitionsEnabled(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(enable_transitions, enable_transitions_def);
     }
 
     public static boolean isShakeEnabled(Context context){
