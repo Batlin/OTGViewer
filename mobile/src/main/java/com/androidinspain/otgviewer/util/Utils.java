@@ -104,7 +104,27 @@ public class Utils {
                 return 1;
             }
 
-            return lhs.getName().compareToIgnoreCase(rhs.getName());
+            // Check if there is any number
+            String lhsNum = lhs.getName().replaceAll("\\D", "");
+            String rhsNum = rhs.getName().replaceAll("\\D", "");
+            int lhsRes=0;
+            int rhsRes=0;
+
+            if(!lhsNum.isEmpty() && !rhsNum.isEmpty()) {
+                lhsRes = extractInt(lhs.getName());
+                rhsRes = extractInt(rhs.getName());
+                return lhsRes - rhsRes;
+            }
+
+            int result = lhs.getName().compareToIgnoreCase(rhs.getName());
+
+            return result;
+        }
+
+        int extractInt(String s) {
+            String num = s.replaceAll("\\D", "");
+            // return 0 if no digits found
+            return num.isEmpty() ? 0 : Integer.parseInt(num);
         }
     };
 
