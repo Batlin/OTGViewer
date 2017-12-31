@@ -36,6 +36,10 @@
     <string name="medium">Medium</string>
     <string name="fast">Fast</string>
 
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="size">Size</string>
+
     <string name="showcase_longclick_dialog_title">Start slides</string>
     <string name="showcase_longclick_dialog_message"></string>
 

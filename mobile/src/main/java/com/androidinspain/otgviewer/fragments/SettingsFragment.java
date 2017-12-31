@@ -77,7 +77,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.action_showcase).setVisible(true);
         menu.findItem(R.id.action_settings).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }

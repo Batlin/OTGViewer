@@ -30,6 +30,7 @@ import java.util.Locale;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidinspain.otgviewer.fragments.ExplorerFragment;
 import com.androidinspain.otgviewer.util.IconUtils;
 import com.androidinspain.otgviewer.util.Utils;
 import com.github.mjdev.libaums.fs.UsbFile;
@@ -94,6 +96,10 @@ public class UsbFileListAdapter extends ArrayAdapter<UsbFile> {
 		files = Arrays.asList(currentDir.listFiles());
 		Log.d(TAG, "files size: " + files.size());
 		Collections.sort(files, Utils.comparator);
+
+		if(!ExplorerFragment.mSortAsc)
+			Collections.reverse(files);
+
 		notifyDataSetChanged();
 	}
 
@@ -133,7 +139,13 @@ public class UsbFileListAdapter extends ArrayAdapter<UsbFile> {
 		DateFormat date_format = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.getDefault());
 		String date = date_format.format(new Date(file.lastModified()));
 
-		summary.setText("Last modified: " + date);
+		// If it's a directory, we can't get size info
+		try {
+			summary.setText("Last modified: " + date + " - " +
+					Formatter.formatFileSize(getContext(), file.getLength()));
+		} catch (Exception e) {
+			summary.setText("Last modified: " + date);
+		}
 
 		//Animation animation = AnimationUtils.loadAnimation(getContext(), (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
 		if(position > lastPosition) {

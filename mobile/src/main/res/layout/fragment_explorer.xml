@@ -3,33 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
-    <ListView
-        android:id="@id/android:list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingRight="@dimen/activity_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/filterby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Nombre"
+                android:textStyle="bold"
+                android:focusable="true"
+                android:paddingRight="@dimen/activity_margin"
+                />
+
+            <ImageView
+                android:id="@+id/orderby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:src="@drawable/sort_order_asc"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dcdcdc">
+        </LinearLayout>
+
+        <ListView
+            android:id="@id/android:list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/empty"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="45dp"
         android:text="@string/listview_empty"
+        android:textAllCaps="true"
+        android:textSize="45dp"
         android:textStyle="bold"
-        android:visibility="gone"
-        android:textAllCaps="true"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/error"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="45dp"
         android:text="@string/listview_error"
+        android:textAllCaps="true"
+        android:textSize="45dp"
         android:textStyle="bold"
-        android:visibility="gone"
-        android:textAllCaps="true"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

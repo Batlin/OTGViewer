@@ -36,6 +36,10 @@
     <string name="medium">Media</string>
     <string name="fast">Rápida</string>
 
+    <string name="name">Nombre</string>
+    <string name="date">Modificación</string>
+    <string name="size">Tamaño</string>
+
     <string name="showcase_longclick_dialog_title">Comenzar diapositivas</string>
     <string name="showcase_longclick_dialog_message"></string>
 

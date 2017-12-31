@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="sortby">
+        <item>@string/name</item>
+        <item>@string/date</item>
+        <item>@string/size</item>
+    </string-array>
+
     <string-array name="seconds">
         <item>@string/slow</item>
         <item>@string/medium</item>

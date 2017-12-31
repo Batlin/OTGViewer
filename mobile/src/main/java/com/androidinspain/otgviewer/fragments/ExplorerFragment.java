@@ -2,6 +2,7 @@ package com.androidinspain.otgviewer.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
@@ -13,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.hardware.usb.UsbDevice;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +44,8 @@ import com.androidinspain.otgviewer.util.Utils;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,6 +76,12 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
     private TextView mEmptyView;
     private boolean mIsShowcase = false;
     private boolean mError = false;
+
+    // Sorting related
+    private TextView mFilterByTV;
+    private ImageView mOrderByIV;
+    public static int mSortByCurrent = 0;
+    public static boolean mSortAsc = true;
 
     public ExplorerFragment() {
         // Required empty public constructor
@@ -130,6 +141,10 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         try{
             files = Arrays.asList(directory.listFiles());
             Collections.sort(files, Utils.comparator);
+
+            if(!mSortAsc)
+                Collections.reverse(files);
+
             int firstImageIndex = 0;
             for (UsbFile file : files) {
                 if(Utils.isImage(file)){
@@ -153,10 +168,64 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
 
     }
 
+    private void openFilterDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("Sort by");
+        alertDialogBuilder.setItems(R.array.sortby, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mSortByCurrent = which;
+                mFilterByTV.setText(Utils.getHumanSortBy(getActivity()));
+                doSort();
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog ad = alertDialogBuilder.create();
+        ad.show();
+    }
+
+    private void doSort() {
+        try {
+            if (adapter!=null)
+                adapter.refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void orderByTrigger() {
+        mSortAsc = !mSortAsc;
+
+        if (mSortAsc)
+            mOrderByIV.setImageResource(R.drawable.sort_order_asc);
+        else
+            mOrderByIV.setImageResource(R.drawable.sort_order_desc);
+
+        doSort();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
+
+        mFilterByTV = (TextView) rootView.findViewById(R.id.filterby);
+        mOrderByIV = (ImageView) rootView.findViewById(R.id.orderby);
+        mFilterByTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFilterDialog();
+            }
+        });
+
+        mOrderByIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                orderByTrigger();
+            }
+        });
+
 
         mSelectedDevice = null;
         UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(getActivity());

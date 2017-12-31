@@ -1,10 +1,13 @@
 package com.androidinspain.otgviewer.util;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.androidinspain.otgviewer.R;
+import com.androidinspain.otgviewer.fragments.ExplorerFragment;
 import com.github.mjdev.libaums.fs.UsbFile;
 
 import java.io.File;
@@ -96,6 +99,29 @@ public class Utils {
         @Override
         public int compare(UsbFile lhs, UsbFile rhs) {
 
+            Log.d(TAG, "comparator. Sorting by: " + ExplorerFragment.mSortByCurrent);
+
+            switch (ExplorerFragment.mSortByCurrent) {
+                case Constants.SORTBY_NAME:
+                    return sortByName(lhs, rhs);
+                case Constants.SORTBY_DATE:
+                    return sortByDate(lhs, rhs);
+                case Constants.SORTBY_SIZE:
+                    return sortBySize(lhs, rhs);
+                default:
+                    break;
+            }
+
+            return 0;
+        }
+
+        int extractInt(String s) {
+            String num = s.replaceAll("\\D", "");
+            // return 0 if no digits found
+            return num.isEmpty() ? 0 : Integer.parseInt(num);
+        }
+
+        int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
             if (lhs.isDirectory() && !rhs.isDirectory()) {
                 return -1;
             }
@@ -103,6 +129,15 @@ public class Utils {
             if (rhs.isDirectory() && !lhs.isDirectory()) {
                 return 1;
             }
+
+            return 0;
+        }
+
+        int sortByName(UsbFile lhs, UsbFile rhs) {
+            int result = 0;
+            int dir = checkIfDirectory(lhs, rhs);
+            if(dir != 0)
+                return dir;
 
             // Check if there is any number
             String lhsNum = lhs.getName().replaceAll("\\D", "");
@@ -116,17 +151,49 @@ public class Utils {
                 return lhsRes - rhsRes;
             }
 
-            int result = lhs.getName().compareToIgnoreCase(rhs.getName());
+            result = lhs.getName().compareToIgnoreCase(rhs.getName());
 
             return result;
         }
 
-        int extractInt(String s) {
-            String num = s.replaceAll("\\D", "");
-            // return 0 if no digits found
-            return num.isEmpty() ? 0 : Integer.parseInt(num);
+        int sortByDate(UsbFile lhs, UsbFile rhs) {
+            long result = 0;
+            int dir = checkIfDirectory(lhs, rhs);
+            if(dir != 0)
+                return dir;
+
+            result = lhs.lastModified() - rhs.lastModified();
+
+            return (int) result;
+        }
+
+        int sortBySize(UsbFile lhs, UsbFile rhs) {
+            long result = 0;
+            int dir = checkIfDirectory(lhs, rhs);
+            if(dir != 0)
+                return dir;
+
+            try {
+                result = lhs.getLength() - rhs.getLength();
+            } catch (Exception e) {
+            }
+
+            return (int) result;
         }
     };
+
+    public static String getHumanSortBy(Context context) {
+        switch (ExplorerFragment.mSortByCurrent) {
+            case Constants.SORTBY_NAME:
+                return context.getString(R.string.name);
+            case Constants.SORTBY_DATE:
+                return context.getString(R.string.date);
+            case Constants.SORTBY_SIZE:
+                return context.getString(R.string.size);
+            default:
+                return context.getString(R.string.name);
+        }
+    }
 
     public static boolean isImage(UsbFile entry){
         int index = entry.getName().lastIndexOf(".");
