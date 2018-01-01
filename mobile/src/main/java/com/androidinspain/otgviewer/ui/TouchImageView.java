@@ -39,9 +39,7 @@ import android.widget.OverScroller;
 import android.widget.Scroller;
 
 public class TouchImageView extends ImageView {
-	
-	private static final String DEBUG = "DEBUG";
-	
+
 	//
 	// SuperMin and SuperMax multipliers. Determine how much the image can be
 	// zoomed below or above the zoom boundaries, before animating back to the
@@ -1270,6 +1268,5 @@ public class TouchImageView extends ImageView {
     private void printMatrixInfo() {
     	float[] n = new float[9];
     	matrix.getValues(n);
-    	Log.d(DEBUG, "Scale: " + n[Matrix.MSCALE_X] + " TransX: " + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]);
     }
 }

@@ -30,6 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -78,10 +80,12 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
     private boolean mError = false;
 
     // Sorting related
-    private TextView mFilterByTV;
-    private ImageView mOrderByIV;
+    private Button mFilterByTV;
+    private ImageButton mOrderByIV;
     public static int mSortByCurrent = 0;
     public static boolean mSortAsc = true;
+
+    private int REQUEST_IMAGEVIEWER = 0;
 
     public ExplorerFragment() {
         // Required empty public constructor
@@ -210,8 +214,8 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
-        mFilterByTV = (TextView) rootView.findViewById(R.id.filterby);
-        mOrderByIV = (ImageView) rootView.findViewById(R.id.orderby);
+        mFilterByTV = (Button) rootView.findViewById(R.id.filterby);
+        mOrderByIV = (ImageButton) rootView.findViewById(R.id.orderby);
         mFilterByTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,9 +248,9 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
             FileSystem fs = mSelectedDevice.getPartitions().get(0).getFileSystem();
             UsbFile root = fs.getRootDirectory();
 
-            //Log.d(TAG, "root: " + root.getName());
             setListAdapter(adapter = new UsbFileListAdapter(getActivity(), root));
-            Log.d(TAG, "root getCurrentDir: " + adapter.getCurrentDir());
+            if(DEBUG)
+                Log.d(TAG, "root getCurrentDir: " + adapter.getCurrentDir());
 
         } catch (Exception e) {
             Log.e(TAG, "error setting up device", e);
@@ -441,7 +445,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
             Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
             intent.putExtra("SHOWCASE", mIsShowcase);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_IMAGEVIEWER);
             return;
         }
 
@@ -553,4 +557,14 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         }
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+
+        if(requestCode == REQUEST_IMAGEVIEWER) {
+            getListView().smoothScrollToPosition(resultCode);
+        }
+    }
+
 }

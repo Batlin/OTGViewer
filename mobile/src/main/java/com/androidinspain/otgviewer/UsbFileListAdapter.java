@@ -54,6 +54,7 @@ import com.github.mjdev.libaums.fs.UsbFile;
  */
 public class UsbFileListAdapter extends ArrayAdapter<UsbFile> {
 
+	private boolean DEBUG = false;
 	private String TAG = getClass().getSimpleName();
 	private int lastPosition = -1;
 
@@ -94,7 +95,8 @@ public class UsbFileListAdapter extends ArrayAdapter<UsbFile> {
 	 */
 	public void refresh() throws IOException {
 		files = Arrays.asList(currentDir.listFiles());
-		Log.d(TAG, "files size: " + files.size());
+		if(DEBUG)
+			Log.d(TAG, "files size: " + files.size());
 		Collections.sort(files, Utils.comparator);
 
 		if(!ExplorerFragment.mSortAsc)
@@ -129,7 +131,8 @@ public class UsbFileListAdapter extends ArrayAdapter<UsbFile> {
 			if(index>0) {
 				String prefix = file.getName().substring(0, index);
 				String ext = file.getName().substring(index + 1);
-				Log.d(TAG, "mimetype: " + Utils.getMimetype(ext.toLowerCase()) + ". ext is: " + ext);
+				if (DEBUG)
+					Log.d(TAG, "mimetype: " + Utils.getMimetype(ext.toLowerCase()) + ". ext is: " + ext);
 				type.setImageResource(IconUtils.loadMimeIcon(Utils.getMimetype(ext.toLowerCase())));
 			}
 

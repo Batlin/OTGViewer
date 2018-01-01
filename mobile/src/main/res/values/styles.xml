@@ -12,4 +12,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SortButtonsTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorButtonNormal">@color/material_grey_50</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+    </style>
+
 </resources>

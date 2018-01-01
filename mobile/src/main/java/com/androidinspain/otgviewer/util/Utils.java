@@ -99,7 +99,8 @@ public class Utils {
         @Override
         public int compare(UsbFile lhs, UsbFile rhs) {
 
-            Log.d(TAG, "comparator. Sorting by: " + ExplorerFragment.mSortByCurrent);
+            if (DEBUG)
+                Log.d(TAG, "comparator. Sorting by: " + ExplorerFragment.mSortByCurrent);
 
             switch (ExplorerFragment.mSortByCurrent) {
                 case Constants.SORTBY_NAME:

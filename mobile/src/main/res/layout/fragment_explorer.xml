@@ -14,26 +14,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:paddingRight="@dimen/activity_margin"
             android:orientation="horizontal">
 
-            <TextView
+            <Button
                 android:id="@+id/filterby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Nombre"
+                android:text="@string/name"
                 android:textStyle="bold"
-                android:focusable="true"
+                android:textColor="#000"
                 android:paddingRight="@dimen/activity_margin"
+                android:paddingLeft="@dimen/activity_margin"
+                android:theme="@style/SortButtonsTheme"
                 />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/orderby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:focusable="true"
                 android:src="@drawable/sort_order_asc"
+                android:paddingRight="@dimen/activity_margin"
+                android:paddingLeft="@dimen/activity_margin"
+                android:theme="@style/SortButtonsTheme"
                 />
         </LinearLayout>
 

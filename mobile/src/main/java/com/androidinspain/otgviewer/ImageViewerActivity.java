@@ -390,6 +390,11 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         return Utils.cachePath + "/" + fileName;
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(mCurrentCount);
+        finish();
+    }
 
     @Override
     protected void onResume() {
@@ -500,7 +505,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         @Override
         protected void onPreExecute() {
             //dialog.show();
-            if(param!=null) {
+            if(param!=null && DEBUG) {
                 Log.d(TAG, "Starting CopyTask with " + param.from.getName());
             }
         }
