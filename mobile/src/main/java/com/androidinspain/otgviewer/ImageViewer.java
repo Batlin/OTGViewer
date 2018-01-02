@@ -2,6 +2,7 @@ package com.androidinspain.otgviewer;
 
 import android.widget.ImageView;
 
+import com.androidinspain.otgviewer.adapters.UsbFilesAdapter;
 import com.github.mjdev.libaums.fs.UsbFile;
 
 /**
@@ -12,7 +13,7 @@ public class ImageViewer {
 
     private UsbFile mCurrentDirectory;
     private UsbFile mCurrentFile;
-    private UsbFileListAdapter mAdapter;
+    private UsbFilesAdapter mAdapter;
 
 
     private ImageViewer(){
@@ -44,11 +45,11 @@ public class ImageViewer {
         mCurrentFile = file;
     }
 
-    public void setAdapter(UsbFileListAdapter adapter){
+    public void setAdapter(UsbFilesAdapter adapter){
         mAdapter = adapter;
     }
 
-    public UsbFileListAdapter getAdapter(){
+    public UsbFilesAdapter getAdapter(){
         return mAdapter;
     }
 

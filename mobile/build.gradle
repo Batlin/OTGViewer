@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 26
 
     defaultConfig {
         applicationId "com.androidinspain.otgviewer"
@@ -24,5 +24,7 @@ android {
 
 dependencies {
     compile 'com.github.mjdev:libaums:0.5.5'
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:26.0.1'
+    compile 'com.android.support:design:26.0.1'
+    compile 'com.android.support:recyclerview-v7:26.0.1'
 }

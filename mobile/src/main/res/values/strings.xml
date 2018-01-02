@@ -36,6 +36,7 @@
     <string name="medium">Medium</string>
     <string name="fast">Fast</string>
 
+    <string name="sort_by">Sort by</string>
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="size">Size</string>

@@ -36,6 +36,7 @@
     <string name="medium">Media</string>
     <string name="fast">Rápida</string>
 
+    <string name="sort_by">Ordenar por</string>
     <string name="name">Nombre</string>
     <string name="date">Modificación</string>
     <string name="size">Tamaño</string>

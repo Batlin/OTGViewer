@@ -22,6 +22,9 @@
     android:minHeight="48dp"
     android:paddingStart="@dimen/list_item_padding"
     android:paddingEnd="@dimen/list_item_padding"
+    android:background="?android:selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:baselineAligned="false">
@@ -29,7 +32,6 @@
     <FrameLayout
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
-        android:layout_marginRight="16dp"
         android:duplicateParentState="true">
 
         <ImageView

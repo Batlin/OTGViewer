@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.androidinspain.otgviewer.R;
 import com.androidinspain.otgviewer.fragments.ExplorerFragment;
@@ -19,7 +20,7 @@ import java.util.Comparator;
 public class Utils {
 
     private static String TAG = "Utils";
-    private static boolean DEBUG = false;
+    private static boolean DEBUG = true;
     public final static File cachePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OTGViewer/cache");
 
     public static int calculateInSampleSize(File f, int reqWidth, int reqHeight) {
@@ -75,8 +76,8 @@ public class Utils {
     }
 
     public static String getMimetype(File f) {
-        if(DEBUG)
-            Log.d(TAG, "extension from: " + Uri.fromFile(f).toString().toLowerCase());
+        //if(DEBUG)
+        //    Log.d(TAG, "extension from: " + Uri.fromFile(f).toString().toLowerCase());
 
         String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(Uri
                 .fromFile(f).toString().toLowerCase());
@@ -117,9 +118,16 @@ public class Utils {
         }
 
         int extractInt(String s) {
-            String num = s.replaceAll("\\D", "");
+            int result = 0;
             // return 0 if no digits found
-            return num.isEmpty() ? 0 : Integer.parseInt(num);
+            try {
+                String num = s.replaceAll("\\D", "");
+                result =num.isEmpty() ? 0 : Integer.parseInt(num);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                return result;
+            }
         }
 
         int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
@@ -203,29 +211,38 @@ public class Utils {
             return false;
 
         try{
-            String prefix = entry.getName().substring(0, index);
-            String ext = entry.getName().substring(index);
-            if (ext.equalsIgnoreCase(".jpg")) {
-                return true;
-            }
-
+            return isImageInner(entry.getName());
         }catch (StringIndexOutOfBoundsException e){
             e.printStackTrace();
         }
-
 
         return false;
     }
 
     public static boolean isImage(File entry){
-        int index = entry.getName().lastIndexOf(".");
-        String prefix = entry.getName().substring(0, index);
-        String ext = entry.getName().substring(index);
+        return isImageInner(entry.getName());
+    }
 
-        if (ext.equalsIgnoreCase(".jpg")) {
+    private static boolean isImageInner(String name) {
+        int index = name.lastIndexOf(".");
+        String prefix = name.substring(0, index);
+        String ext = name.substring(index);
+
+        if (ext.equalsIgnoreCase(".jpg") || ext.equalsIgnoreCase(".png")) {
             return true;
         }
 
         return false;
+    }
+
+    public static boolean isConfirmButton(KeyEvent event){
+        switch (event.getKeyCode()){
+            case KeyEvent.KEYCODE_ENTER:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_BUTTON_A:
+                return true;
+            default:
+                return false;
+        }
     }
 }

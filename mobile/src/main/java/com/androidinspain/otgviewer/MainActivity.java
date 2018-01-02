@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 fragment = (Fragment) mSettingsFragment;
                 break;
             case EXPLORER_FRAGMENT:
-                fragment = mExplorerFragment;
+                fragment = (Fragment) mExplorerFragment;
                 break;
             default:
                 break;

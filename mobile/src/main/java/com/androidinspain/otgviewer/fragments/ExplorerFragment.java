@@ -2,26 +2,18 @@ package com.androidinspain.otgviewer.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
-import android.content.ContentProvider;
-import android.content.ContentProviderClient;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.hardware.usb.UsbDevice;
-import android.media.Image;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.provider.DocumentsContract;
-import android.app.ListFragment;
-import android.support.v7.internal.widget.AdapterViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,34 +21,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidinspain.otgviewer.ImageViewer;
 import com.androidinspain.otgviewer.ImageViewerActivity;
 import com.androidinspain.otgviewer.R;
-import com.androidinspain.otgviewer.UsbFileListAdapter;
+import com.androidinspain.otgviewer.adapters.UsbFilesAdapter;
+import com.androidinspain.otgviewer.recyclerview.RecyclerItemClickListener;
 import com.androidinspain.otgviewer.task.CopyTaskParam;
+import com.androidinspain.otgviewer.util.Constants;
 import com.androidinspain.otgviewer.util.Utils;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -64,26 +51,30 @@ import java.util.NoSuchElementException;
 /**
  * Created by roberto on 30/08/15.
  */
-public class ExplorerFragment extends ListFragment implements AdapterView.OnItemLongClickListener{
+public class ExplorerFragment extends Fragment {
 
     private String TAG = getClass().getSimpleName();
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     private ExplorerCallback mMainActivity;
 
     private UsbMassStorageDevice mSelectedDevice;
-    /* package */ UsbFileListAdapter adapter;
+    /* package */ UsbFilesAdapter mAdapter;
     private Deque<UsbFile> dirs = new ArrayDeque<UsbFile>();
 
     private TextView mEmptyView;
     private boolean mIsShowcase = false;
     private boolean mError = false;
 
+    private RecyclerView mRecyclerView;
+    private RecyclerItemClickListener mRecyclerItemClickListener;
+
     // Sorting related
+    private LinearLayout mSortByLL;
     private Button mFilterByTV;
     private ImageButton mOrderByIV;
-    public static int mSortByCurrent = 0;
-    public static boolean mSortAsc = true;
+    public static int mSortByCurrent;
+    public static boolean mSortAsc;
 
     private int REQUEST_IMAGEVIEWER = 0;
 
@@ -131,56 +122,50 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         return false;
     }
 
-    private void checkShowcase(){
+    private void checkShowcase() {
 
-        if(mError)
+        if (mError)
             return;
 
-        UsbFile directory = adapter.getCurrentDir();
-        if(DEBUG)
+        UsbFile directory = mAdapter.getCurrentDir();
+        if (DEBUG)
             Log.d(TAG, "Checking showcase. Current directory: " + directory.isDirectory());
         boolean available = false;
-        List<UsbFile> files = new ArrayList<UsbFile>();
+        List<UsbFile> files;
 
-        try{
-            files = Arrays.asList(directory.listFiles());
-            Collections.sort(files, Utils.comparator);
-
-            if(!mSortAsc)
-                Collections.reverse(files);
+        try {
+            files = mAdapter.getFiles();
 
             int firstImageIndex = 0;
             for (UsbFile file : files) {
-                if(Utils.isImage(file)){
+                if (Utils.isImage(file)) {
                     available = true;
                     break;
                 }
                 firstImageIndex++;
             }
 
-            if (available && !files.isEmpty()){
+            if (available && !files.isEmpty()) {
                 mIsShowcase = true;
                 copyFileToCache(files.get(firstImageIndex));
-            }else{
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.toast_no_images), Toast.LENGTH_LONG).show();
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
     }
 
     private void openFilterDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Sort by");
+        alertDialogBuilder.setTitle(getString(R.string.sort_by));
         alertDialogBuilder.setItems(R.array.sortby, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mSortByCurrent = which;
-                mFilterByTV.setText(Utils.getHumanSortBy(getActivity()));
-                doSort();
+                updateSortUI(true);
                 dialog.dismiss();
             }
         });
@@ -190,23 +175,52 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
     }
 
     private void doSort() {
+        saveSortFilter();
+        doRefresh();
+    }
+
+    private void doRefresh(UsbFile entry) {
+        mAdapter.setCurrentDir(entry);
+        doRefresh();
+    }
+
+    private void doRefresh() {
         try {
-            if (adapter!=null)
-                adapter.refresh();
+            if (mAdapter != null)
+                mAdapter.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Log.d(TAG, "Scroll to");
+        mRecyclerView.scrollToPosition(0);
+    }
+
+    private void saveSortFilter() {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(
+                Constants.SORT_FILTER_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(Constants.SORT_FILTER_KEY, mSortByCurrent);
+        editor.putBoolean(Constants.SORT_ASC_KEY, mSortAsc);
+        editor.commit();
     }
 
     private void orderByTrigger() {
         mSortAsc = !mSortAsc;
+        updateSortUI(true);
+    }
+
+    private void updateSortUI(boolean doSort) {
+        mSortByLL.setVisibility(View.VISIBLE);
+        mFilterByTV.setText(Utils.getHumanSortBy(getActivity()));
 
         if (mSortAsc)
             mOrderByIV.setImageResource(R.drawable.sort_order_asc);
         else
             mOrderByIV.setImageResource(R.drawable.sort_order_desc);
 
-        doSort();
+        if(doSort)
+            doSort();
     }
 
     @Override
@@ -214,29 +228,36 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Constants.SORT_FILTER_PREF
+                , Context.MODE_PRIVATE);
+        mSortAsc = sharedPref.getBoolean(Constants.SORT_ASC_KEY, true);
+        mSortByCurrent = sharedPref.getInt(Constants.SORT_FILTER_KEY, 0);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_rv);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mSortByLL = (LinearLayout) rootView.findViewById(R.id.sortby_layout);
         mFilterByTV = (Button) rootView.findViewById(R.id.filterby);
         mOrderByIV = (ImageButton) rootView.findViewById(R.id.orderby);
+
         mFilterByTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFilterDialog();
             }
         });
-
         mOrderByIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 orderByTrigger();
             }
         });
-
-
         mSelectedDevice = null;
         UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(getActivity());
 
         mError = false;
 
-        if(devices.length>0)
+        if (devices.length > 0)
             mSelectedDevice = devices[0];
 
         updateUI();
@@ -248,9 +269,15 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
             FileSystem fs = mSelectedDevice.getPartitions().get(0).getFileSystem();
             UsbFile root = fs.getRootDirectory();
 
-            setListAdapter(adapter = new UsbFileListAdapter(getActivity(), root));
-            if(DEBUG)
-                Log.d(TAG, "root getCurrentDir: " + adapter.getCurrentDir());
+            setupRecyclerView();
+            mAdapter = new UsbFilesAdapter(getActivity(), root,
+                    mRecyclerItemClickListener);
+            mRecyclerView.setAdapter(mAdapter);
+
+            updateSortUI(false);
+
+            if (DEBUG)
+                Log.d(TAG, "root getCurrentDir: " + mAdapter.getCurrentDir());
 
         } catch (Exception e) {
             Log.e(TAG, "error setting up device", e);
@@ -258,7 +285,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
             mError = true;
         }
 
-        if(mError) {
+        if (mError) {
             mEmptyView = (TextView) rootView.findViewById(R.id.error);
             mEmptyView.setVisibility(View.VISIBLE);
         } else {
@@ -269,33 +296,44 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         return rootView;
     }
 
-
-
-    @Override
-    public void onActivityCreated(Bundle savedState) {
-        super.onActivityCreated(savedState);
-
-        if(DEBUG)
-            Log.d(TAG, "onActivityCreated");
-
-        try{
-            getListView().setOnItemLongClickListener(this);
-            if(mError){
-                getListView().setVisibility(View.GONE);
-                getListView().setAdapter(null);
-                getListView().setEmptyView(mEmptyView);
+    private void setupRecyclerView() {
+        mRecyclerItemClickListener = new RecyclerItemClickListener(
+                getActivity(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                onListItemClick(position);
             }
-        }catch(Exception e){
-            Log.e(TAG, "Content view is not yet created!", e);
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                onItemLongClick(position);
+            }
+        });
+
+        mRecyclerView.addOnItemTouchListener(mRecyclerItemClickListener);
+    }
+
+    private void onListItemClick(int position) {
+        UsbFile entry = mAdapter.getItem(position);
+        try {
+            if (entry.isDirectory()) {
+                dirs.push(mAdapter.getCurrentDir());
+                doRefresh(entry);
+            } else {
+                mIsShowcase = false;
+                copyFileToCache(entry);
+
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "error starting to copy!", e);
         }
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        if(DEBUG)
+    private boolean onItemLongClick(int position) {
+        if (DEBUG)
             Log.d(TAG, "Long click on position: " + position);
 
-        UsbFile entry = adapter.getItem(position);
+        UsbFile entry = mAdapter.getItem(position);
 
         if (Utils.isImage(entry)) {
             showLongClickDialog(entry);
@@ -304,7 +342,26 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         return true;
     }
 
-    private void showLongClickDialog(final UsbFile entry)    {
+    @Override
+    public void onActivityCreated(Bundle savedState) {
+        super.onActivityCreated(savedState);
+
+        if (DEBUG)
+            Log.d(TAG, "onActivityCreated");
+
+        try {
+            //mRecyclerView.setOnItemLongClickListener(this);
+            if (mError) {
+                mRecyclerView.setVisibility(View.GONE);
+                mRecyclerView.setAdapter(null);
+                //mRecyclerView.setEmptyView(mEmptyView);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Content view is not yet created!", e);
+        }
+    }
+
+    private void showLongClickDialog(final UsbFile entry) {
         // We already checked it's an image
 
         final AlertDialog.Builder dialogAlert = new AlertDialog.Builder(getActivity());
@@ -332,29 +389,10 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onListItemClick(ListView list, View view, int position, long id) {
-        UsbFile entry = adapter.getItem(position);
-        try {
-            if (entry.isDirectory()) {
-                dirs.push(adapter.getCurrentDir());
-                setListAdapter(adapter = new UsbFileListAdapter(getActivity(), entry));
-
-            } else {
-                mIsShowcase = false;
-                copyFileToCache(entry);
-
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "error starting to copy!", e);
-        }
-    }
-
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onAttach");
 
         try {
@@ -366,7 +404,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
 
     }
 
-    private void updateUI(){
+    private void updateUI() {
         mMainActivity.setABTitle(getString(R.string.explorer_title), true);
     }
 
@@ -376,21 +414,21 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
 
         mSelectedDevice = null;
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onDetach");
     }
 
 
-    public boolean popUsbFile(){
+    public boolean popUsbFile() {
         try {
             UsbFile dir = dirs.pop();
-            setListAdapter(adapter = new UsbFileListAdapter(getActivity(), dir));
+            doRefresh(dir);
 
             return true;
         } catch (NoSuchElementException e) {
             Log.e(TAG, "we should remove this fragment!");
-        } catch (IOException e) {
-            Log.e(TAG, "error initializing adapter!", e);
+        } catch (Exception e) {
+            Log.e(TAG, "error initializing mAdapter!", e);
         }
 
         return false;
@@ -405,7 +443,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         String ext = entry.getName().substring(index);
 
         // prefix must be at least 3 characters
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "ext: " + ext);
 
         if (prefix.length() < 3) {
@@ -425,21 +463,21 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
 
     }
 
-    private void launchIntent(UsbFile entry){
+    private void launchIntent(UsbFile entry) {
         String fileName = entry.getName();
         launchIntent(new File(Utils.cachePath, fileName));
     }
 
     private void launchIntent(File f) {
 
-        if(Utils.isImage(f)){
-            ImageViewer.getInstance().setAdapter(adapter);
-            if(adapter.getCurrentDir()==null){
+        if (Utils.isImage(f)) {
+            ImageViewer.getInstance().setAdapter(mAdapter);
+            if (mAdapter.getCurrentDir() == null) {
                 FileSystem fs = mSelectedDevice.getPartitions().get(0).getFileSystem();
                 UsbFile root = fs.getRootDirectory();
                 ImageViewer.getInstance().setCurrentDirectory(root);
-            }else{
-                ImageViewer.getInstance().setCurrentDirectory(adapter.getCurrentDir());
+            } else {
+                ImageViewer.getInstance().setCurrentDirectory(mAdapter.getCurrentDir());
             }
 
             Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
@@ -472,7 +510,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         public CopyTask(ExplorerFragment act, boolean isImage) {
             parent = act;
             cp = this;
-            if(isImage)
+            if (isImage)
                 showImageDialog();
             else
                 showDialog();
@@ -494,11 +532,11 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
         }
 
         @Override
-        protected void onCancelled(Void result){
+        protected void onCancelled(Void result) {
             // Remove uncompleted data file
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "Removing uncomplete file transfer");
-            if(param!=null)
+            if (param != null)
                 param.to.delete();
         }
 
@@ -525,7 +563,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
             try {
                 FileOutputStream out = new FileOutputStream(param.to);
                 for (long i = 0; i < length; i += buffer.limit()) {
-                    if(!isCancelled()) {
+                    if (!isCancelled()) {
                         buffer.limit((int) Math.min(buffer.capacity(), length - i));
                         params[0].from.read(i, buffer);
                         out.write(buffer.array(), 0, buffer.limit());
@@ -537,7 +575,7 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
             } catch (IOException e) {
                 Log.e(TAG, "error copying!", e);
             }
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "copy time: " + (System.currentTimeMillis() - time));
 
             return null;
@@ -560,10 +598,12 @@ public class ExplorerFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_IMAGEVIEWER) {
-            getListView().smoothScrollToPosition(resultCode);
+        if (requestCode == REQUEST_IMAGEVIEWER) {
+            if (DEBUG)
+                Log.d(TAG, "Scrolling to position: " + resultCode);
+            mRecyclerView.scrollToPosition(resultCode);
         }
     }
 

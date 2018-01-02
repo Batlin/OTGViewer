@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidinspain.otgviewer.adapters.UsbFilesAdapter;
 import com.androidinspain.otgviewer.fragments.SettingsFragment;
 import com.androidinspain.otgviewer.task.CopyTaskParam;
 import com.androidinspain.otgviewer.ui.TouchImageView;
@@ -104,7 +105,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
     // UI
     private final int FADE_TIMEOUT = 1000;
 
-    private UsbFileListAdapter mUsbAdapter;
+    private UsbFilesAdapter mUsbAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,22 +130,17 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         List<UsbFile> files;
 
         try {
-            files = mUsbAdapter.getFiles();
-            Collections.sort(files, Utils.comparator);
+            mImagesFiles = mUsbAdapter.getImageFiles();
 
-            for (UsbFile file : files) {
-                if(DEBUG)
-                    Log.d(TAG, "localCount " + localCount);
+            mTotalCount = mImagesFiles.size();
 
-                if (Utils.isImage(file)) {
-                    mImagesFiles.add(file);
-                    if (file.getName().equalsIgnoreCase(mCurrentFile.getName())) {
-                        mCurrentCount = localCount;
-                    }
-
-                    mTotalCount++;
-                    localCount++;
+            for (UsbFile file : mImagesFiles) {
+                Log.d(TAG, "localCount " + localCount);
+                if (file.getName().equalsIgnoreCase(mCurrentFile.getName())) {
+                    mCurrentCount = localCount;
                 }
+
+                localCount++;
             }
         } catch (Exception e) {
             Log.e(TAG, "error setting up device", e);
