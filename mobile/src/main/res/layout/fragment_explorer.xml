@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -9,8 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="true"
         android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -19,40 +19,36 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="horizontal"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/filterby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/name"
-                android:textStyle="bold"
-                android:textColor="#000"
-                android:paddingRight="@dimen/activity_margin"
                 android:paddingLeft="@dimen/activity_margin"
-                android:theme="@style/SortButtonsTheme"
-                />
+                android:paddingRight="@dimen/activity_margin"
+                android:text="@string/name"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:theme="@style/SortButtonsTheme" />
 
             <ImageButton
                 android:id="@+id/orderby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/sort_order_asc"
-                android:paddingRight="@dimen/activity_margin"
                 android:paddingLeft="@dimen/activity_margin"
-                android:theme="@style/SortButtonsTheme"
-                />
+                android:paddingRight="@dimen/activity_margin"
+                android:src="@drawable/sort_order_asc"
+                android:theme="@style/SortButtonsTheme" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#dcdcdc">
-        </LinearLayout>
+            android:background="#dcdcdc"></LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <com.androidinspain.otgviewer.recyclerview.EmptyRecyclerView
             android:id="@+id/list_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,20 +56,37 @@
             app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
             app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
             app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
-            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-            />
+            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable" />
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/empty"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="@string/listview_empty"
-        android:textAllCaps="true"
-        android:textSize="45dp"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="250.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="25.0dip"
+            android:adjustViewBounds="true"
+            android:alpha="1.0"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cabinet" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/listview_empty"
+            android:textAllCaps="true"
+            android:textSize="45dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/error"

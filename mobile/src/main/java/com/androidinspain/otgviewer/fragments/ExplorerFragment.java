@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +30,7 @@ import com.androidinspain.otgviewer.ImageViewer;
 import com.androidinspain.otgviewer.ImageViewerActivity;
 import com.androidinspain.otgviewer.R;
 import com.androidinspain.otgviewer.adapters.UsbFilesAdapter;
+import com.androidinspain.otgviewer.recyclerview.EmptyRecyclerView;
 import com.androidinspain.otgviewer.recyclerview.RecyclerItemClickListener;
 import com.androidinspain.otgviewer.task.CopyTaskParam;
 import com.androidinspain.otgviewer.util.Constants;
@@ -62,11 +62,12 @@ public class ExplorerFragment extends Fragment {
     /* package */ UsbFilesAdapter mAdapter;
     private Deque<UsbFile> dirs = new ArrayDeque<UsbFile>();
 
-    private TextView mEmptyView;
+    private LinearLayout mEmptyView;
+    private TextView mErrorView;
     private boolean mIsShowcase = false;
     private boolean mError = false;
 
-    private RecyclerView mRecyclerView;
+    private EmptyRecyclerView mRecyclerView;
     private RecyclerItemClickListener mRecyclerItemClickListener;
 
     // Sorting related
@@ -233,7 +234,7 @@ public class ExplorerFragment extends Fragment {
         mSortAsc = sharedPref.getBoolean(Constants.SORT_ASC_KEY, true);
         mSortByCurrent = sharedPref.getInt(Constants.SORT_FILTER_KEY, 0);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_rv);
+        mRecyclerView = (EmptyRecyclerView) rootView.findViewById(R.id.list_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mSortByLL = (LinearLayout) rootView.findViewById(R.id.sortby_layout);
@@ -286,10 +287,11 @@ public class ExplorerFragment extends Fragment {
         }
 
         if (mError) {
-            mEmptyView = (TextView) rootView.findViewById(R.id.error);
-            mEmptyView.setVisibility(View.VISIBLE);
+            mErrorView = (TextView) rootView.findViewById(R.id.error);
+            mErrorView.setVisibility(View.VISIBLE);
         } else {
-            mEmptyView = (TextView) rootView.findViewById(R.id.empty);
+            mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty);
+            mRecyclerView.setEmptyView(mEmptyView, mSortByLL);
         }
 
         // Inflate the layout for this fragment
@@ -350,11 +352,9 @@ public class ExplorerFragment extends Fragment {
             Log.d(TAG, "onActivityCreated");
 
         try {
-            //mRecyclerView.setOnItemLongClickListener(this);
             if (mError) {
                 mRecyclerView.setVisibility(View.GONE);
                 mRecyclerView.setAdapter(null);
-                //mRecyclerView.setEmptyView(mEmptyView);
             }
         } catch (Exception e) {
             Log.e(TAG, "Content view is not yet created!", e);
