@@ -52,11 +52,15 @@
             android:id="@+id/list_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             app:fastScrollEnabled="true"
             app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
             app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
             app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
-            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable" />
+            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable" >
+            <requestFocus />
+        </com.androidinspain.otgviewer.recyclerview.EmptyRecyclerView>
     </LinearLayout>
 
     <LinearLayout

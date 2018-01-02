@@ -61,12 +61,12 @@ public class EmptyRecyclerView extends RecyclerView {
     }
 
     private void updateEmptyView() {
-
         if (mEmptyView != null && getAdapter() != null) {
             boolean showEmptyView = getAdapter().getItemCount() == 0;
             mEmptyView.setVisibility(showEmptyView ? VISIBLE : GONE);
             mSortByLL.setVisibility(showEmptyView ? GONE : VISIBLE);
             setVisibility(showEmptyView ? GONE : VISIBLE);
         }
+
     }
 }

@@ -12,6 +12,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,12 +83,26 @@ public class ExplorerFragment extends Fragment {
 
     private int REQUEST_IMAGEVIEWER = 0;
 
+    private final int REQUEST_FOCUS = 0;
+    private final int REQUEST_FOCUS_DELAY = 200; //ms
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case REQUEST_FOCUS:
+                    if(mRecyclerView!=null)
+                        mRecyclerView.requestFocus();
+            }
+        }
+    };
+
     public ExplorerFragment() {
         // Required empty public constructor
     }
 
     public interface ExplorerCallback {
         public void setABTitle(String title, boolean showMenu);
+
         public CoordinatorLayout getCoordinatorLayout();
     }
 
@@ -189,6 +205,7 @@ public class ExplorerFragment extends Fragment {
         doRefresh();
     }
 
+
     private void doRefresh() {
         try {
             if (mAdapter != null)
@@ -197,8 +214,8 @@ public class ExplorerFragment extends Fragment {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "Scroll to");
         mRecyclerView.scrollToPosition(0);
+        mHandler.sendEmptyMessageDelayed(REQUEST_FOCUS,REQUEST_FOCUS_DELAY);
     }
 
     private void saveSortFilter() {
@@ -224,7 +241,7 @@ public class ExplorerFragment extends Fragment {
         else
             mOrderByIV.setImageResource(R.drawable.sort_order_desc);
 
-        if(doSort)
+        if (doSort)
             doSort();
     }
 
@@ -328,7 +345,6 @@ public class ExplorerFragment extends Fragment {
             } else {
                 mIsShowcase = false;
                 copyFileToCache(entry);
-
             }
         } catch (IOException e) {
             Log.e(TAG, "error starting to copy!", e);
