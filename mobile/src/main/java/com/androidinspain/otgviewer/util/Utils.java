@@ -205,8 +205,6 @@ public class Utils {
     }
 
     public static boolean isImage(UsbFile entry){
-        int index = entry.getName().lastIndexOf(".");
-
         if(entry.isDirectory())
             return false;
 
@@ -224,15 +222,19 @@ public class Utils {
     }
 
     private static boolean isImageInner(String name) {
+        boolean result = false;
+
         int index = name.lastIndexOf(".");
-        String prefix = name.substring(0, index);
         String ext = name.substring(index);
 
-        if (ext.equalsIgnoreCase(".jpg") || ext.equalsIgnoreCase(".png")) {
-            return true;
+        if (ext.equalsIgnoreCase(".jpg") || ext.equalsIgnoreCase(".png")
+                || ext.equalsIgnoreCase(".jpeg")) {
+            result = true;
         }
 
-        return false;
+        Log.d(TAG, "isImageInner " + name + ": " + result);
+
+        return result;
     }
 
     public static boolean isConfirmButton(KeyEvent event){

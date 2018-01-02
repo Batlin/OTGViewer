@@ -182,7 +182,7 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ArrayList<UsbFile> result = new ArrayList<>();
 
         for (UsbFile file : mFiles) {
-            if(Utils.isImage(file));
+            if(Utils.isImage(file))
                 result.add(file);
         }
 

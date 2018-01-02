@@ -17,7 +17,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     private RecyclerView mRecyclerView;
 
     private final String TAG = getClass().getName();
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);

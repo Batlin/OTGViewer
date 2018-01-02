@@ -127,7 +127,6 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         }
 
         int localCount = 0;
-        List<UsbFile> files;
 
         try {
             mImagesFiles = mUsbAdapter.getImageFiles();
