@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,7 +32,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.HomeCallback, ExplorerFragment.ExplorerCallback, SettingsFragment.SettingsCallback {
+public class MainActivity extends AppCompatActivity implements HomeFragment.HomeCallback,
+        ExplorerFragment.ExplorerCallback, SettingsFragment.SettingsCallback {
 
     private String TAG = "OTGViewer";
     private boolean DEBUG = false;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private UsbMassStorageDevice mUsbMSDevice;
 
     private Toolbar mToolbar;
+    private CoordinatorLayout mCoordinatorLayout;
 
     private HomeFragment mHomeFragment;
     private SettingsFragment mSettingsFragment;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
         setSupportActionBar(mToolbar);
 
@@ -77,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mVisibilityManager = new VisibilityManager();
 
         displayView(HOME_FRAGMENT);
+    }
+
+    public CoordinatorLayout getCoordinatorLayout() {
+        return mCoordinatorLayout;
     }
 
     private void displayView(int position) {

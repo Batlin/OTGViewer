@@ -13,7 +13,7 @@ import android.view.View;
 public class EmptyRecyclerView extends RecyclerView {
 
     private String TAG = getClass().getName();
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private View mEmptyView;
     private View mSortByLL;
 
@@ -44,7 +44,6 @@ public class EmptyRecyclerView extends RecyclerView {
      *
      */
     public void setEmptyView(View emptyView, View sortByLL) {
-        Log.d(TAG, "setEmptyView");
         mEmptyView = emptyView;
         mSortByLL = sortByLL;
     }

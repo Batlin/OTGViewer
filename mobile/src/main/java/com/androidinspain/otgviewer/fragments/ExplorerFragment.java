@@ -12,6 +12,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,6 +87,7 @@ public class ExplorerFragment extends Fragment {
 
     public interface ExplorerCallback {
         public void setABTitle(String title, boolean showMenu);
+        public CoordinatorLayout getCoordinatorLayout();
     }
 
     @Override
@@ -150,7 +153,8 @@ public class ExplorerFragment extends Fragment {
                 mIsShowcase = true;
                 copyFileToCache(files.get(firstImageIndex));
             } else {
-                Toast.makeText(getActivity(), getString(R.string.toast_no_images), Toast.LENGTH_LONG).show();
+                Snackbar.make(mMainActivity.getCoordinatorLayout(),
+                        getString(R.string.toast_no_images), Snackbar.LENGTH_LONG).show();
             }
 
         } catch (Exception e) {
@@ -496,7 +500,8 @@ public class ExplorerFragment extends Fragment {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(getActivity(), getString(R.string.toast_no_app_match), Toast.LENGTH_LONG).show();
+            Snackbar.make(mMainActivity.getCoordinatorLayout(),
+                    getString(R.string.toast_no_app_match), Snackbar.LENGTH_LONG).show();
         }
     }
 
