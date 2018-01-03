@@ -457,7 +457,7 @@ public class ExplorerFragment extends Fragment {
     private void copyFileToCache(UsbFile entry) throws IOException {
         CopyTaskParam param = new CopyTaskParam();
         param.from = entry;
-        Utils.cachePath.mkdirs();
+        Utils.otgViewerCachePath.mkdirs();
         int index = entry.getName().lastIndexOf(".");
         String prefix = entry.getName().substring(0, index);
         String ext = entry.getName().substring(index);
@@ -471,21 +471,17 @@ public class ExplorerFragment extends Fragment {
         }
 
         String fileName = prefix + ext;
-        File cacheFile = new File(Utils.cachePath, fileName);
+        File downloadedFile = new File(Utils.otgViewerPath, fileName);
+        File cacheFile = new File(Utils.otgViewerCachePath, fileName);
         param.to = cacheFile;
 
         ImageViewer.getInstance().setCurrentFile(entry);
 
-        if (!cacheFile.exists())
+        if (!cacheFile.exists() && !downloadedFile.exists())
             new CopyTask(this, Utils.isImage(entry)).execute(param);
         else
             launchIntent(cacheFile);
 
-    }
-
-    private void launchIntent(UsbFile entry) {
-        String fileName = entry.getName();
-        launchIntent(new File(Utils.cachePath, fileName));
     }
 
     private void launchIntent(File f) {

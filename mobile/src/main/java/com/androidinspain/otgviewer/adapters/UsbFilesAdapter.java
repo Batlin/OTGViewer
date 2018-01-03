@@ -43,7 +43,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private boolean DEBUG = true;
     private String TAG = getClass().getSimpleName();
-    private int lastPosition = -1;
 
     private List<UsbFile> mFiles;
     private UsbFile mCurrentDir;
@@ -86,8 +85,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mFiles = new ArrayList<UsbFile>();
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        lastPosition = -1;
 
         refresh();
     }
@@ -152,8 +149,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } catch (Exception e) {
                 holder.summary.setText("Last modified: " + date);
             }
-
-            lastPosition = Math.max(position,lastPosition);
         }
     }
 

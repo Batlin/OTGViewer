@@ -384,7 +384,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
     }
 
     private String getCacheFullPath(String fileName) {
-        return Utils.cachePath + "/" + fileName;
+        return getCacheDir() + File.separator + fileName;
     }
 
     @Override
@@ -504,6 +504,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             //dialog.show();
             if(param!=null && DEBUG) {
                 Log.d(TAG, "Starting CopyTask with " + param.from.getName());
+
             }
         }
 

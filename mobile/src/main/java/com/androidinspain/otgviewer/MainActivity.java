@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         ExplorerFragment.ExplorerCallback, SettingsFragment.SettingsCallback {
 
     private String TAG = "OTGViewer";
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     private List<UsbDevice> mDetectedDevices;
 
@@ -250,7 +250,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
                 while (deviceIterator.hasNext()) {
                     UsbDevice device = deviceIterator.next();
-                    mDetectedDevices.add(device);
+                    if(Utils.isMassStorageDevice(device))
+                        mDetectedDevices.add(device);
                 }
             }
 
@@ -293,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         super.onDestroy();
 
         unregisterReceiver(mUsbReceiver);
-        Utils.deleteCache();
+        Utils.deleteCache(getCacheDir());
     }
 
     private void updateUI(){
