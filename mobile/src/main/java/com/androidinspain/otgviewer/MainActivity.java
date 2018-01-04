@@ -314,9 +314,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             Log.d(TAG, "got permission!");
 
         UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(this);
-        mUsbMSDevice = devices[0];
-
-        setupDevice();
+        if(devices.length > 0) {
+            mUsbMSDevice = devices[0];
+            setupDevice();
+        }
     }
 
 
