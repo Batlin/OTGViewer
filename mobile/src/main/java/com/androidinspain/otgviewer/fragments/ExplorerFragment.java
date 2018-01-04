@@ -57,7 +57,7 @@ import java.util.NoSuchElementException;
 public class ExplorerFragment extends Fragment {
 
     private String TAG = getClass().getSimpleName();
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     private ExplorerCallback mMainActivity;
 

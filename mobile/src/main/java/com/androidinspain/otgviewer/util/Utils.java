@@ -26,7 +26,7 @@ public class Utils {
     public final static File otgViewerPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OTGViewer");
     public final static File otgViewerCachePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OTGViewer/cache");
     private static String TAG = "Utils";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
 
     public static int calculateInSampleSize(File f, int reqWidth, int reqHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();

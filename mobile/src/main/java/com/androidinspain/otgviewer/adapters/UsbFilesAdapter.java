@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
     private String TAG = getClass().getSimpleName();
 
     private List<UsbFile> mFiles;

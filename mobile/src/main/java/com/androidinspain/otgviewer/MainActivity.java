@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         ExplorerFragment.ExplorerCallback, SettingsFragment.SettingsCallback {
 
     private String TAG = "OTGViewer";
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     private List<UsbDevice> mDetectedDevices;
 
