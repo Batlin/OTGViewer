@@ -255,14 +255,17 @@ public class Utils {
         boolean result = false;
 
         int index = name.lastIndexOf(".");
-        String ext = name.substring(index);
 
-        if (ext.equalsIgnoreCase(".jpg") || ext.equalsIgnoreCase(".png")
-                || ext.equalsIgnoreCase(".jpeg")) {
-            result = true;
+        if (index > 0) {
+            String ext = name.substring(index);
+
+            if (ext.equalsIgnoreCase(".jpg") || ext.equalsIgnoreCase(".png")
+                    || ext.equalsIgnoreCase(".jpeg")) {
+                result = true;
+            }
+
+            Log.d(TAG, "isImageInner " + name + ": " + result);
         }
-
-        Log.d(TAG, "isImageInner " + name + ": " + result);
 
         return result;
     }

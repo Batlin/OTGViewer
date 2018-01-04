@@ -458,9 +458,18 @@ public class ExplorerFragment extends Fragment {
         CopyTaskParam param = new CopyTaskParam();
         param.from = entry;
         Utils.otgViewerCachePath.mkdirs();
+
         int index = entry.getName().lastIndexOf(".");
-        String prefix = entry.getName().substring(0, index);
-        String ext = entry.getName().substring(index);
+
+        String prefix;
+        String ext = "";
+
+        if(index<0)
+            prefix = entry.getName();
+        else {
+            prefix = entry.getName().substring(0, index);
+            ext = entry.getName().substring(index);
+        }
 
         // prefix must be at least 3 characters
         if (DEBUG)
