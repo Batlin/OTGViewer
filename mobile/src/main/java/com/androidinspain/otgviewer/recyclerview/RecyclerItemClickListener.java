@@ -21,6 +21,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
+
         public void onLongItemClick(View view, int position);
     }
 
@@ -39,7 +40,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
             public void onLongPress(MotionEvent e) {
                 View child = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && mListener != null) {
-                    if(DEBUG)
+                    if (DEBUG)
                         Log.d(TAG, "onLongPress!");
                     mListener.onLongItemClick(child, mRecyclerView.getChildAdapterPosition(child));
                 }
@@ -47,28 +48,31 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
         });
     }
 
-    @Override public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-        if(DEBUG)
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+        if (DEBUG)
             Log.d(TAG, "onInterceptTouchEvent " + e.toString());
 
         View childView = view.findChildViewUnder(e.getX(), e.getY());
         if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
             mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "onInterceptTouchEvent: singleClick!");
             return true;
         }
         return false;
     }
 
-    @Override public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
-        if(DEBUG)
+    @Override
+    public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        if (DEBUG)
             Log.d(TAG, "onTouchEvent " + motionEvent.toString());
 
     }
 
     @Override
-    public void onRequestDisallowInterceptTouchEvent (boolean disallowIntercept){}
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+    }
 
     public boolean handleDPad(View child, int keyCode, KeyEvent keyEvent) {
 
@@ -85,8 +89,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 }
                 return true;
             }
-        } else if(keyEvent.getAction() == KeyEvent.ACTION_UP && Utils.isConfirmButton(keyEvent)
-                && ((keyEvent.getFlags() & KeyEvent.FLAG_LONG_PRESS) != KeyEvent.FLAG_LONG_PRESS)){
+        } else if (keyEvent.getAction() == KeyEvent.ACTION_UP && Utils.isConfirmButton(keyEvent)
+                && ((keyEvent.getFlags() & KeyEvent.FLAG_LONG_PRESS) != KeyEvent.FLAG_LONG_PRESS)) {
             mListener.onItemClick(child, position);
             return true;
         }

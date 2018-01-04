@@ -3,21 +3,14 @@ package com.androidinspain.otgviewer.fragments;
 /**
  * Created by roberto on 29/08/15.
  */
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.androidinspain.otgviewer.R;
 
@@ -40,19 +33,19 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         // Required empty public constructor
     }
 
-    public static boolean areTransitionsEnabled(Context context){
+    public static boolean areTransitionsEnabled(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(enable_transitions, enable_transitions_def);
     }
 
-    public static boolean isShakeEnabled(Context context){
+    public static boolean isShakeEnabled(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(enable_shake, enable_shake_def);
     }
 
-    public static boolean isLowRamEnabled(Context context){
+    public static boolean isLowRamEnabled(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(low_ram, low_ram_def);
     }
 
-    public static int getShowcaseSpeed(Context context){
+    public static int getShowcaseSpeed(Context context) {
         return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString(showcase_speed, showcase_speed_def));
     }
 
@@ -94,7 +87,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     }
 
-    private void updateUI(){
+    private void updateUI() {
         mMainActivity.setABTitle(getString(R.string.settings_title), true);
     }
 

@@ -3,16 +3,12 @@ package com.androidinspain.otgviewer.listener;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
 import android.util.Log;
-
-import com.androidinspain.otgviewer.MainActivity;
 
 /**
  * Created by roberto on 13/09/15.
  */
-public class UsbReceiver extends BroadcastReceiver{
+public class UsbReceiver extends BroadcastReceiver {
     private String TAG = getClass().getSimpleName();
 
     @Override

@@ -28,7 +28,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidinspain.otgviewer.ImageViewer;
 import com.androidinspain.otgviewer.ImageViewerActivity;
@@ -90,7 +89,7 @@ public class ExplorerFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case REQUEST_FOCUS:
-                    if(mRecyclerView!=null)
+                    if (mRecyclerView != null)
                         mRecyclerView.requestFocus();
             }
         }
@@ -215,7 +214,7 @@ public class ExplorerFragment extends Fragment {
         }
 
         mRecyclerView.scrollToPosition(0);
-        mHandler.sendEmptyMessageDelayed(REQUEST_FOCUS,REQUEST_FOCUS_DELAY);
+        mHandler.sendEmptyMessageDelayed(REQUEST_FOCUS, REQUEST_FOCUS_DELAY);
     }
 
     private void saveSortFilter() {
@@ -464,7 +463,7 @@ public class ExplorerFragment extends Fragment {
         String prefix;
         String ext = "";
 
-        if(index<0)
+        if (index < 0)
             prefix = entry.getName();
         else {
             prefix = entry.getName().substring(0, index);

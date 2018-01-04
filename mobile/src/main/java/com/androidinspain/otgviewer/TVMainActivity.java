@@ -15,7 +15,7 @@ public class TVMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onCreate TVMainActivity");
 
         Intent intent = new Intent(this, MainActivity.class); // Your list's Intent

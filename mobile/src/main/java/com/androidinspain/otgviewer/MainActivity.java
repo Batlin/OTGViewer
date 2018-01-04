@@ -1,5 +1,8 @@
 package com.androidinspain.otgviewer;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,17 +11,12 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.androidinspain.otgviewer.fragments.ExplorerFragment;
 import com.androidinspain.otgviewer.fragments.HomeFragment;
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         setSupportActionBar(mToolbar);
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onCreate");
 
         mHomeFragment = new HomeFragment();
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         String tag = Integer.toString(position);
 
         if (getFragmentManager().findFragmentByTag(tag) != null && getFragmentManager().findFragmentByTag(tag).isVisible()) {
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "No transition needed. Already in that fragment!");
 
             return;
@@ -117,11 +115,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.animator.enter, R.animator.exit, R.animator.pop_enter, R.animator.pop_exit);;
+            fragmentTransaction.setCustomAnimations(R.animator.enter, R.animator.exit, R.animator.pop_enter, R.animator.pop_exit);
+            ;
             fragmentTransaction.replace(R.id.container_body, fragment, tag);
 
             // Home fragment is not added to the stack
-            if(position != HOME_FRAGMENT){
+            if (position != HOME_FRAGMENT) {
                 fragmentTransaction.addToBackStack(null);
             }
 
@@ -133,24 +132,24 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         // Catch back action and pops from backstack
         // (if you called previously to addToBackStack() in your transaction)
         boolean result = false;
 
-        if(mExplorerFragment!=null && mExplorerFragment.isVisible()){
-            if(DEBUG)
+        if (mExplorerFragment != null && mExplorerFragment.isVisible()) {
+            if (DEBUG)
                 Log.d(TAG, "we are on ExplorerFragment. Result: " + result);
 
             result = mExplorerFragment.popUsbFile();
         }
 
-        if(result)
+        if (result)
             return;
-        else if (getFragmentManager().getBackStackEntryCount() > 0 ){
+        else if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "Pop fragment");
         }
         // Default action on back pressed
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 displayView(SETTINGS_FRAGMENT);
                 return true;
@@ -187,9 +186,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         return super.onOptionsItemSelected(item);
     }
 
-    private void removedUSB(){
+    private void removedUSB() {
 
-        if(mVisibilityManager.getIsVisible()) {
+        if (mVisibilityManager.getIsVisible()) {
             while (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStackImmediate();
             }
@@ -206,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "mUsbReceiver triggered. Action " + action);
 
             checkUSBStatus();
@@ -219,14 +218,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if(device != null){
+                        if (device != null) {
                             //call method to set up device communication
-                            if(DEBUG)
+                            if (DEBUG)
                                 Log.d(TAG, "granted permission for device " + device.getDeviceName() + "!");
                             connectDevice(device);
                         }
-                    }
-                    else {
+                    } else {
                         Log.e(TAG, "permission denied for device " + device);
                     }
                 }
@@ -234,23 +232,23 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         }
     };
 
-    private void checkUSBStatus(){
+    private void checkUSBStatus() {
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "checkUSBStatus");
 
         mDetectedDevices.clear();
 
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
-        if(mUsbManager!=null) {
+        if (mUsbManager != null) {
             HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
 
             if (!deviceList.isEmpty()) {
                 Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
                 while (deviceIterator.hasNext()) {
                     UsbDevice device = deviceIterator.next();
-                    if(Utils.isMassStorageDevice(device))
+                    if (Utils.isMassStorageDevice(device))
                         mDetectedDevices.add(device);
                 }
             }
@@ -263,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     protected void onResume() {
         super.onResume();
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onResume");
 
         mVisibilityManager.setIsVisible(true);
@@ -280,10 +278,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onPause");
 
         mVisibilityManager.setIsVisible(false);
@@ -297,24 +295,24 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         Utils.deleteCache(getCacheDir());
     }
 
-    private void updateUI(){
-        if(DEBUG)
+    private void updateUI() {
+        if (DEBUG)
             Log.d(TAG, "updateUI");
 
-        if(mHomeFragment!=null && mHomeFragment.isAdded()) {
+        if (mHomeFragment != null && mHomeFragment.isAdded()) {
             mHomeFragment.updateUI();
         }
     }
 
-    private void connectDevice(UsbDevice device){
-        if(DEBUG)
+    private void connectDevice(UsbDevice device) {
+        if (DEBUG)
             Log.d(TAG, "Connecting to device");
 
-        if(mUsbManager.hasPermission(device) && DEBUG)
+        if (mUsbManager.hasPermission(device) && DEBUG)
             Log.d(TAG, "got permission!");
 
         UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(this);
-        if(devices.length > 0) {
+        if (devices.length > 0) {
             mUsbMSDevice = devices[0];
             setupDevice();
         }
@@ -336,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     @Override
-    public void setABTitle(String title, boolean showMenu){
+    public void setABTitle(String title, boolean showMenu) {
 
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(showMenu);

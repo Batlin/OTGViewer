@@ -1,20 +1,15 @@
 package com.androidinspain.otgviewer.adapters;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidinspain.otgviewer.R;
 import com.androidinspain.otgviewer.fragments.ExplorerFragment;
@@ -22,8 +17,6 @@ import com.androidinspain.otgviewer.recyclerview.RecyclerItemClickListener;
 import com.androidinspain.otgviewer.util.IconUtils;
 import com.androidinspain.otgviewer.util.Utils;
 import com.github.mjdev.libaums.fs.UsbFile;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -39,7 +32,7 @@ import java.util.Locale;
  * Created by roberto on 13/08/17.
  */
 
-public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private boolean DEBUG = true;
     private String TAG = getClass().getSimpleName();
@@ -91,14 +84,14 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void refresh() throws IOException {
         mFiles = Arrays.asList(mCurrentDir.listFiles());
-        if(DEBUG) {
+        if (DEBUG) {
             Log.d(TAG, "files size: " + mFiles.size());
             Log.d(TAG, "REFRESH.  mSortByCurrent: " + ExplorerFragment.mSortByCurrent + ", mSortAsc: " + ExplorerFragment.mSortAsc);
         }
 
         Collections.sort(mFiles, Utils.comparator);
 
-        if(!ExplorerFragment.mSortAsc)
+        if (!ExplorerFragment.mSortAsc)
             Collections.reverse(mFiles);
 
         notifyDataSetChanged();
@@ -119,7 +112,7 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         //if(DEBUG)
         //    Log.d(TAG, "onBindViewHolder. Position: " + position);
 
-        if(viewHolder instanceof MyViewHolder) {
+        if (viewHolder instanceof MyViewHolder) {
             UsbFile file = mFiles.get(position);
 
             MyViewHolder holder = (MyViewHolder) viewHolder;
@@ -128,7 +121,7 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.type.setImageResource(R.drawable.ic_folder_alpha);
             } else {
                 int index = file.getName().lastIndexOf(".");
-                if(index>0) {
+                if (index > 0) {
                     String prefix = file.getName().substring(0, index);
                     String ext = file.getName().substring(index + 1);
                     //if (DEBUG)
@@ -177,7 +170,7 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ArrayList<UsbFile> result = new ArrayList<>();
 
         for (UsbFile file : mFiles) {
-            if(Utils.isImage(file))
+            if (Utils.isImage(file))
                 result.add(file);
         }
 

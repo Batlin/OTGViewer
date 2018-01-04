@@ -3,7 +3,6 @@ package com.androidinspain.otgviewer.recyclerview;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -41,7 +40,6 @@ public class EmptyRecyclerView extends RecyclerView {
     /**
      * Designate a view as the empty view. When the backing adapter has no
      * data this view will be made visible and the recycler view hidden.
-     *
      */
     public void setEmptyView(View emptyView, View sortByLL) {
         mEmptyView = emptyView;

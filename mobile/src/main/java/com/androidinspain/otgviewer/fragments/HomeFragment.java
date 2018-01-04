@@ -3,22 +3,19 @@ package com.androidinspain.otgviewer.fragments;
 /**
  * Created by roberto on 29/08/15.
  */
+
 import android.app.Activity;
+import android.app.ListFragment;
 import android.hardware.usb.UsbDevice;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.androidinspain.otgviewer.MainActivity;
 import com.androidinspain.otgviewer.R;
 
 import java.util.ArrayList;
@@ -39,7 +36,9 @@ public class HomeFragment extends ListFragment {
 
     public interface HomeCallback {
         public List<UsbDevice> getUsbDevices();
+
         public void requestPermission(int pos);
+
         public void setABTitle(String title, boolean showMenu);
     }
 
@@ -65,7 +64,7 @@ public class HomeFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onAttach");
 
         try {
@@ -80,13 +79,13 @@ public class HomeFragment extends ListFragment {
     public void onDetach() {
         super.onDetach();
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onDetach");
     }
 
-    public void updateUI(){
+    public void updateUI() {
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "updateUI in HomeFragment");
 
         mMainActivity.setABTitle(getString(R.string.home_title), false);
@@ -94,7 +93,7 @@ public class HomeFragment extends ListFragment {
 
         List<String> showDevices = new ArrayList<String>();
 
-        for (int i=0; i<mDetectedDevices.size(); i++) {
+        for (int i = 0; i < mDetectedDevices.size(); i++) {
             // API level 21
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 showDevices.add(mDetectedDevices.get(i).getProductName());
@@ -119,7 +118,7 @@ public class HomeFragment extends ListFragment {
 
         mMainActivity.requestPermission(position);
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "You clicked " + selectedDevice + " at position " + position);
     }
 }

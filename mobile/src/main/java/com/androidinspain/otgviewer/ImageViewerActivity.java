@@ -48,10 +48,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.lang.System;
 
 /**
  * Created by roberto on 21/08/15.
@@ -122,7 +119,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         mIsShowcase = getIntent().getBooleanExtra("SHOWCASE", false);
         if (mIsShowcase) {
             mImmersive = true;
-            mHandler.sendEmptyMessageDelayed(SHOW_TUTORIAL,SHOW_TUTORIAL_DELAY);
+            mHandler.sendEmptyMessageDelayed(SHOW_TUTORIAL, SHOW_TUTORIAL_DELAY);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
@@ -145,7 +142,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             Log.e(TAG, "error setting up device", e);
         }
 
-        if(DEBUG) {
+        if (DEBUG) {
             Log.d(TAG, "mCurrentFile " + mCurrentFile.getName());
             Log.d(TAG, "mTotalCount " + mTotalCount);
             Log.d(TAG, "mCurrentCount " + mCurrentCount);
@@ -173,7 +170,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "ViewPager width: " + mLayoutWidth + ", height: " + mLayoutHeight);
 
     }
@@ -184,23 +181,23 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                 case NEXT_SHOWCASE:
                     int nextImage = mCurrentCount + 1;
 
-                    if(DEBUG) {
+                    if (DEBUG) {
                         Log.d(TAG_NEXT_SHOWCASE, "mCurrentCount: " + mCurrentCount);
                         Log.d(TAG_NEXT_SHOWCASE, "mAdapter.getCount(): " + mAdapter.getCount());
                         Log.d(TAG_NEXT_SHOWCASE, "nextImage: " + nextImage);
                     }
 
-                    if (nextImage < mAdapter.getCount()){
+                    if (nextImage < mAdapter.getCount()) {
 
-                        if(isLayoutReady(nextImage)) {
+                        if (isLayoutReady(nextImage)) {
                             mCurrentCount++;
 
                             mViewPager.setCurrentItem(mCurrentCount, mTransitionsEnabled);
-                            if(DEBUG)
+                            if (DEBUG)
                                 Log.d(TAG_NEXT_SHOWCASE, "isImageReady(" + nextImage + ") is true. Showing photo " + mCurrentCount + ". Sending NEXT_SHOWCASE message in " + mShowcaseSpeed);
                             sendEmptyMessageDelayed(NEXT_SHOWCASE, mShowcaseSpeed);
-                        }else{
-                            if(DEBUG)
+                        } else {
+                            if (DEBUG)
                                 Log.d(TAG_NEXT_SHOWCASE, "isImageReady( " + nextImage + ") is false. Trying again in " + NEXT_SHOWCASE_RETRY_TIMEOUT_MS + "ms");
                             sendEmptyMessageDelayed(NEXT_SHOWCASE, NEXT_SHOWCASE_RETRY_TIMEOUT_MS);
                         }
@@ -220,7 +217,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
         int visibility = View.VISIBLE;
 
-        if(container!=null)
+        if (container != null)
             visibility = container.findViewById(R.id.loading).getVisibility();
 
         return visibility == View.GONE;
@@ -228,15 +225,15 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
     }
 
     // We show it only the first time
-    private void showToastTutorial(){
+    private void showToastTutorial() {
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putBoolean(TUTORIAL_SP, true);
         editor.apply();
 
-        Toast.makeText(this, getString(R.string.showcase_tutorial),Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.showcase_tutorial), Toast.LENGTH_LONG).show();
     }
 
-    private boolean isTutorialNeeded(){
+    private boolean isTutorialNeeded() {
         /*
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         boolean tutorialPassed = prefs.getBoolean(TUTORIAL_SP, false);
@@ -258,42 +255,42 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             return false;
     }
 
-    private void setImmersiveMode(){
+    private void setImmersiveMode() {
 
         int visibility;
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "setImmersiveMode: " + mImmersive);
 
-        if(mImmersive){
+        if (mImmersive) {
             visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                     | View.SYSTEM_UI_FLAG_IMMERSIVE;
 
             mFooter.animate().alpha(0.0f);
-            if(mIsShowcase && !mShowcaseRunning){
+            if (mIsShowcase && !mShowcaseRunning) {
                 startShowcase();
             }
 
         } else {
             visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
             mFooter.animate().alpha(1.0f);
-            if(mIsShowcase && mShowcaseRunning)
+            if (mIsShowcase && mShowcaseRunning)
                 stopShowcase();
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mDecorView.setSystemUiVisibility(visibility);
         }
 
     }
 
-    private void startShowcase(){
+    private void startShowcase() {
         mHandler.removeMessages(NEXT_SHOWCASE);
         mHandler.sendEmptyMessageDelayed(NEXT_SHOWCASE, mShowcaseSpeed);
         mShowcaseRunning = true;
@@ -305,13 +302,13 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         */
     }
 
-    private void stopShowcase(){
+    private void stopShowcase() {
         mHandler.removeMessages(NEXT_SHOWCASE);
         mShowcaseRunning = false;
         showFadeIcon(getResources().getDrawable(R.drawable.pause_icon));
     }
 
-    private void showFadeIcon(Drawable icon){
+    private void showFadeIcon(Drawable icon) {
         mPausePlay.setImageDrawable(icon);
         mPausePlay.setAlpha(1f);
         mPausePlay.setVisibility(View.VISIBLE);
@@ -320,21 +317,21 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
     private Bitmap getImageResourceFromPosition(int position) {
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "decode file from " + getCacheFullPath(mImagesFiles.get(position).getName()));
 
         Bitmap bitmap = null;
 
         File f = new File(getCacheFullPath(mImagesFiles.get(position).getName()));
 
-        if(isImageReady(f)) {
+        if (isImageReady(f)) {
             BitmapFactory.Options opts = new BitmapFactory.Options();
             opts.inSampleSize = Utils.calculateInSampleSize(f, mLayoutWidth, mLayoutHeight);
 
-            if(mLowRam || System.getProperty("ro.config.low_ram", "false").equals("true"))
+            if (mLowRam || System.getProperty("ro.config.low_ram", "false").equals("true"))
                 opts.inSampleSize *= 2;
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "file exists! inSampleSize: " + opts.inSampleSize);
 
             opts.inPreferQualityOverSpeed = false;
@@ -346,11 +343,11 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             final int maxSize = Math.max(mLayoutWidth, mLayoutHeight);
             int outWidth;
             int outHeight;
-            if(bitmap!=null){
+            if (bitmap != null) {
                 int inWidth = bitmap.getWidth();
                 int inHeight = bitmap.getHeight();
 
-                if(inWidth > inHeight){
+                if (inWidth > inHeight) {
                     outWidth = maxSize;
                     outHeight = (inHeight * maxSize) / inWidth;
                 } else {
@@ -358,7 +355,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                     outWidth = (inWidth * maxSize) / inHeight;
                 }
 
-                if(DEBUG)
+                if (DEBUG)
                     Log.d(TAG, "outWidth: " + outWidth + ", outHeight: " + outHeight);
 
                 bitmap = Bitmap.createScaledBitmap(bitmap, outWidth, outHeight, true);
@@ -366,7 +363,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
             return bitmap;
         } else {
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "file doesn't exist! Starting asynctask");
 
             CopyTaskParam param = new CopyTaskParam();
@@ -403,13 +400,13 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         mShakeEnabled = SettingsFragment.isShakeEnabled(this);
         mShowcaseSpeed = SettingsFragment.getShowcaseSpeed(this);
 
-        if(!mTransitionsEnabled)
+        if (!mTransitionsEnabled)
             mViewPager.setPageTransformer(false, new NoPageTransformer());
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "mLowRam: " + mLowRam + ", mShakeEnabled: " + mShakeEnabled);
 
-        if(!mIsShowcase && mShakeEnabled)
+        if (!mIsShowcase && mShakeEnabled)
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         setImmersiveMode();
@@ -418,24 +415,25 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             startShowcase();
         */
     }
+
     @Override
     protected void onPause() {
         super.onPause();
 
-        if(!mIsShowcase && mShakeEnabled)
+        if (!mIsShowcase && mShakeEnabled)
             mSensorManager.unregisterListener(this);
 
-        if(mIsShowcase && mShowcaseRunning)
+        if (mIsShowcase && mShowcaseRunning)
             stopShowcase();
 
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
 
-        for(CopyTask cp : copyArray){
-            if(cp!=null)
+        for (CopyTask cp : copyArray) {
+            if (cp != null)
                 cp.cancel(true);
         }
 
@@ -449,7 +447,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
         @Override
         public void onPageSelected(int position) {
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "onPageSelected: " + position);
 
             mCurrentCount = position;
@@ -504,19 +502,19 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         @Override
         protected void onPreExecute() {
             //dialog.show();
-            if(param!=null && DEBUG) {
+            if (param != null && DEBUG) {
                 Log.d(TAG, "Starting CopyTask with " + param.from.getName());
 
             }
         }
 
         @Override
-        protected void onCancelled(Bitmap result){
+        protected void onCancelled(Bitmap result) {
             // Remove uncompleted data file
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "Removing uncomplete file transfer");
 
-            if(param != null && param.to.exists())
+            if (param != null && param.to.exists())
                 param.to.delete();
         }
 
@@ -528,33 +526,33 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             long length = params[0].from.getLength();
             try {
                 FileOutputStream out = new FileOutputStream(param.to);
-                    for (long i = 0; i < length; i += buffer.limit()) {
-                        if(!isCancelled()) {
-                            buffer.limit((int) Math.min(buffer.capacity(), length - i));
-                            params[0].from.read(i, buffer);
-                            out.write(buffer.array(), 0, buffer.limit());
-                            buffer.clear();
-                        }
+                for (long i = 0; i < length; i += buffer.limit()) {
+                    if (!isCancelled()) {
+                        buffer.limit((int) Math.min(buffer.capacity(), length - i));
+                        params[0].from.read(i, buffer);
+                        out.write(buffer.array(), 0, buffer.limit());
+                        buffer.clear();
                     }
+                }
                 out.close();
             } catch (IOException e) {
                 Log.e(TAG, "error copying!", e);
             }
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "copy time: " + (System.currentTimeMillis() - time));
             return getImageResourceFromPosition(param.position);
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "CopyTask done!");
 
             RelativeLayout container = (RelativeLayout) mViewPager.findViewWithTag("pos" + param.position);
 
-            if(container!=null) {
-                if(DEBUG)
+            if (container != null) {
+                if (DEBUG)
                     Log.d(TAG, "container is not null");
 
                 final TouchImageView imageView = (TouchImageView) container.findViewById(R.id.image);
@@ -565,7 +563,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                 imageView.setVisibility(View.VISIBLE);
             }
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "onPostExecute. builtLayout: " + param.position);
 
             copyArray.remove(this);
@@ -579,7 +577,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
     }
 
-    private RelativeLayout buildLayout(ViewGroup container, int position){
+    private RelativeLayout buildLayout(ViewGroup container, int position) {
 
         LayoutInflater inflater = (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final RelativeLayout imageLayout = (RelativeLayout) inflater.inflate(R.layout.viewpager_layout, null);
@@ -592,7 +590,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         Bitmap image = getImageResourceFromPosition(position);
-        if (image==null){
+        if (image == null) {
             spinner.setIndeterminate(true);
             imageView.setVisibility(View.GONE);
             spinner.setVisibility(View.VISIBLE);
@@ -606,7 +604,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                if(mGestureDetector.onTouchEvent(event)){
+                if (mGestureDetector.onTouchEvent(event)) {
                     return true;
                 }
 
@@ -621,15 +619,15 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
     }
 
-    private void decreaseSpeed(){
-        if(mShowcaseRunning) {
+    private void decreaseSpeed() {
+        if (mShowcaseRunning) {
             mShowcaseSpeed *= SPEED_FACTOR;
             showFadeIcon(getResources().getDrawable(R.drawable.fr_icon));
         }
     }
 
-    private void increaseSpeed(){
-        if(mShowcaseRunning) {
+    private void increaseSpeed() {
+        if (mShowcaseRunning) {
             mShowcaseSpeed /= SPEED_FACTOR;
             showFadeIcon(getResources().getDrawable(R.drawable.ff_icon));
         }
@@ -646,7 +644,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "Single tap up detected!");
 
             mImmersive = !mImmersive;
@@ -658,10 +656,10 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "Swipe onFling: " + velocityX + ", " + velocityY);
 
-            if(Math.abs(velocityY) > VELOCITY_THRESHOLD){
+            if (Math.abs(velocityY) > VELOCITY_THRESHOLD) {
                 switch (getSlope(e1.getX(), e1.getY(), e2.getX(), e2.getY())) {
                     case SWIPE_TOP:
                         increaseSpeed();
@@ -685,7 +683,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                 return SWIPE_TOP;
             if (angle >= 135 && angle < 180 || angle < -135 && angle > -180)
                 return SWIPE_LEFT;
-            if (angle < -45 && angle>= -135)
+            if (angle < -45 && angle >= -135)
                 return SWIPE_DOWN;
             if (angle > -45 && angle <= 45)
                 return SWIPE_RIGHT;
@@ -717,13 +715,13 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
                 long diffTime = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                float speed = Math.abs(x + y + z - last_x - last_y - last_z)/ diffTime * 10000;
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
                 if (speed > SHAKE_THRESHOLD && (curTime - lastGesture) > 1000) {
                     if (DEBUG)
                         Log.d(TAG, "SHAKE DETECTED!");
 
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, mTransitionsEnabled);
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, mTransitionsEnabled);
                     lastGesture = curTime;
                 }
 
@@ -762,7 +760,7 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
     private static class NoPageTransformer implements ViewPager.PageTransformer {
         public void transformPage(View view, float position) {
             if (position < 0) {
-                view.setScrollX((int)((float)(view.getWidth()) * position));
+                view.setScrollX((int) ((float) (view.getWidth()) * position));
             } else if (position > 0) {
                 view.setScrollX(-(int) ((float) (view.getWidth()) * -position));
             } else {
