@@ -435,8 +435,10 @@ public class ImageViewerActivity extends AppCompatActivity implements SensorEven
         super.onDestroy();
 
         for(CopyTask cp : copyArray){
-            cp.cancel(true);
+            if(cp!=null)
+                cp.cancel(true);
         }
+
     }
 
     private class VPOnPageChangeListener implements ViewPager.OnPageChangeListener {
